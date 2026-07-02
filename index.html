@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spécialisations — MSc AI for Business</title>
+<style>
+  :root{
+    --bg:#0f1117;
+    --panel:#171923;
+    --panel-2:#1e212e;
+    --border:#2a2e3d;
+    --text:#eef0f5;
+    --text-dim:#9aa0b0;
+    --accent:#6366f1;
+    --grey:#6b7280;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 18px 60px;}
+  header{margin-bottom:20px;}
+  h1{font-size:1.5rem;margin:0 0 4px;}
+  .subtitle{color:var(--text-dim);font-size:.9rem;margin:0;}
+  .toolbar{
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    margin-top:18px;
+  }
+  input[type="search"]{
+    flex:1;min-width:180px;
+    background:var(--panel-2);border:1px solid var(--border);
+    color:var(--text);padding:10px 14px;border-radius:10px;font-size:.9rem;
+  }
+  input[type="search"]:focus{outline:2px solid var(--accent);outline-offset:0;}
+  button{
+    background:var(--panel-2);color:var(--text);border:1px solid var(--border);
+    padding:10px 14px;border-radius:10px;font-size:.85rem;cursor:pointer;
+    display:flex;align-items:center;gap:6px;
+  }
+  button:hover{border-color:var(--accent);}
+  button.reset{background:var(--accent);border-color:var(--accent);color:white;}
+  .status{font-size:.78rem;color:var(--text-dim);display:flex;align-items:center;gap:6px;}
+  .dot-live{width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;}
+  .dot-live.error{background:#ef4444;}
+  .dot-live.loading{background:#f59e0b;}
+
+  .grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px;
+  }
+  @media (max-width:760px){.grid{grid-template-columns:1fr;}}
+
+  .panel{
+    background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px;
+  }
+  .panel h2{
+    font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--text-dim);margin:0 0 12px;font-weight:600;
+  }
+  .list{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow-y:auto;}
+
+  .spec-card{
+    border:1px solid var(--border);border-radius:10px;padding:12px 14px;
+    cursor:pointer;transition:opacity .15s ease, border-color .15s ease, background .15s ease;
+    background:var(--panel-2);
+  }
+  .spec-card.dimmed{opacity:.35;}
+  .spec-card.active{border-color:var(--accent-color,var(--accent));background:rgba(99,102,241,.12);}
+  .spec-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .spec-name{display:flex;align-items:center;gap:9px;font-weight:600;font-size:.95rem;}
+  .swatch{width:10px;height:10px;border-radius:50%;flex:none;}
+  .count-badge{
+    background:var(--border);color:var(--text);font-size:.75rem;
+    padding:2px 9px;border-radius:999px;font-weight:600;
+  }
+  .spec-people{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+    display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .chip{
+    background:var(--border);padding:4px 10px;border-radius:999px;font-size:.8rem;
+  }
+  .chip.highlight{outline:1.5px solid var(--accent);}
+
+  .person-row{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    border:1px solid var(--border);border-radius:10px;padding:10px 14px;
+    cursor:pointer;transition:opacity .15s ease, border-color .15s ease, background .15s ease;
+    background:var(--panel-2);
+  }
+  .person-row.dimmed{opacity:.3;}
+  .person-row.active{border-color:var(--accent);background:rgba(99,102,241,.15);}
+  .person-name{font-weight:600;font-size:.92rem;}
+  .person-spec{
+    display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text-dim);
+  }
+
+  .empty, .error-box{
+    color:var(--text-dim);font-size:.88rem;padding:24px 8px;text-align:center;
+  }
+  .error-box{color:#f87171;}
+  footer{margin-top:26px;color:var(--text-dim);font-size:.78rem;text-align:center;}
+  footer a{color:var(--text-dim);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Qui fait quelle spécialisation ?</h1>
+    <p class="subtitle">Basé sur les réponses du Google Form — cliquez sur une spécialisation ou sur une personne, ça marche dans les deux sens.</p>
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Rechercher une personne…">
+      <button id="resetBtn" style="display:none" class="reset">✕ Tout afficher</button>
+      <button id="refreshBtn">⟳ Actualiser</button>
+      <span class="status"><span class="dot-live loading" id="statusDot"></span><span id="statusText">Chargement…</span></span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="panel">
+      <h2 id="specHeading">Spécialisations</h2>
+      <div class="list" id="specList"><div class="empty">Chargement des données…</div></div>
+    </section>
+    <section class="panel">
+      <h2 id="peopleHeading">Personnes</h2>
+      <div class="list" id="peopleList"><div class="empty">Chargement des données…</div></div>
+    </section>
+  </div>
+
+  <footer>
+    Source : <a href="https://docs.google.com/spreadsheets/d/1vlO_Jsv6eoYjPSaFkuKL_7AUa5jQGTM3UDsTSVPKqw4/edit" target="_blank" rel="noopener">Google Sheet</a>
+    · actualisation automatique toutes les 45s
+  </footer>
+</div>
+
+<script>
+const SHEET_ID = '1vlO_Jsv6eoYjPSaFkuKL_7AUa5jQGTM3UDsTSVPKqw4';
+const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+const REFRESH_MS = 45000;
+const PALETTE = ['#6366f1','#ec4899','#10b981','#f59e0b','#3b82f6','#ef4444','#14b8a6','#8b5cf6','#f97316','#06b6d4','#84cc16','#e11d48'];
+const UNSPECIFIED_KEY = '__unspecified__';
+
+let people = [];        // [{id, prenom, nom, specKey, specLabel}]
+let specGroups = [];    // [{key, label, color, people:[...]}]
+let state = { selectedSpec: null, highlightPersonId: null, search: '' };
+
+const el = (id) => document.getElementById(id);
+
+function normalize(str){
+  return (str || '').toString().normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+}
+
+function colorFor(key){
+  if(key === UNSPECIFIED_KEY) return '#6b7280';
+  let h = 0;
+  for(let i=0;i<key.length;i++){ h = (h*31 + key.charCodeAt(i)) >>> 0; }
+  return PALETTE[h % PALETTE.length];
+}
+
+function setStatus(kind, msg){
+  const dot = el('statusDot');
+  const text = el('statusText');
+  dot.className = 'dot-live' + (kind === 'error' ? ' error' : kind === 'loading' ? ' loading' : '');
+  if(kind === 'ok'){
+    text.textContent = 'À jour · ' + new Date().toLocaleTimeString('fr-FR');
+  } else if(kind === 'loading'){
+    text.textContent = 'Chargement…';
+  } else {
+    text.textContent = 'Erreur : ' + (msg || 'impossible de charger les données');
+  }
+}
+
+function cellVal(row, idx){
+  if(idx == null) return '';
+  const cell = row.c && row.c[idx];
+  return (cell && cell.v != null) ? String(cell.v).trim() : '';
+}
+
+async function fetchData(){
+  setStatus('loading');
+  try{
+    const res = await fetch(GVIZ_URL + '&_=' + Date.now());
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    const match = text.match(/setResponse\(([\s\S]*)\);\s*$/);
+    if(!match) throw new Error('réponse Google Sheets illisible (le lien est-il partagé ?)');
+    const json = JSON.parse(match[1]);
+    processData(json);
+    setStatus('ok');
+  }catch(err){
+    console.error(err);
+    setStatus('error', err.message);
+    renderError(err.message);
+  }
+}
+
+function processData(json){
+  const cols = json.table.cols || [];
+  const rows = json.table.rows || [];
+
+  const idx = {};
+  cols.forEach((c, i) => {
+    const label = normalize(c.label);
+    if(!label) return;
+    if(label.includes('prenom')) idx.prenom = i;
+    else if(label.includes('specialisation') || label.includes('specialite')) idx.spec = i;
+    else if(label.includes('nom')) idx.nom = i;
+    else if(label.includes('horodateur') || label.includes('timestamp')) idx.time = i;
+  });
+
+  const groups = new Map();
+  people = [];
+
+  rows.forEach((row, i) => {
+    const prenom = cellVal(row, idx.prenom);
+    const nom = cellVal(row, idx.nom);
+    const specRaw = cellVal(row, idx.spec);
+    if(!prenom && !nom) return; // ligne vide
+
+    const specLabel = specRaw || 'Non renseigné';
+    const specKey = specRaw ? normalize(specRaw) : UNSPECIFIED_KEY;
+
+    const person = {
+      id: 'p' + i,
+      prenom, nom,
+      fullName: [prenom, nom].filter(Boolean).join(' '),
+      specKey, specLabel
+    };
+    people.push(person);
+
+    if(!groups.has(specKey)){
+      groups.set(specKey, { key: specKey, label: specLabel, color: colorFor(specKey), people: [] });
+    }
+    groups.get(specKey).people.push(person);
+  });
+
+  specGroups = Array.from(groups.values()).sort((a, b) => {
+    if(a.key === UNSPECIFIED_KEY) return 1;
+    if(b.key === UNSPECIFIED_KEY) return -1;
+    return b.people.length - a.people.length || a.label.localeCompare(b.label);
+  });
+
+  people.sort((a, b) => a.nom.localeCompare(b.nom) || a.prenom.localeCompare(b.prenom));
+
+  render();
+}
+
+function selectSpec(key){
+  state.highlightPersonId = null;
+  state.selectedSpec = (state.selectedSpec === key) ? null : key;
+  render();
+}
+
+function selectPerson(person){
+  state.selectedSpec = person.specKey;
+  state.highlightPersonId = person.id;
+  render();
+}
+
+function resetSelection(){
+  state.selectedSpec = null;
+  state.highlightPersonId = null;
+  render();
+}
+
+function renderError(msg){
+  el('specList').innerHTML = `<div class="error-box">${msg}<br><br>Vérifiez que le Google Sheet est bien partagé en "Tous les utilisateurs disposant du lien".</div>`;
+  el('peopleList').innerHTML = '';
+}
+
+function render(){
+  el('resetBtn').style.display = state.selectedSpec ? 'flex' : 'none';
+
+  if(specGroups.length === 0){
+    el('specList').innerHTML = '<div class="empty">Aucune réponse pour l\'instant.</div>';
+    el('peopleList').innerHTML = '<div class="empty">Aucune réponse pour l\'instant.</div>';
+    el('specHeading').textContent = 'Spécialisations';
+    el('peopleHeading').textContent = 'Personnes';
+    return;
+  }
+
+  el('specHeading').textContent = `Spécialisations (${specGroups.length})`;
+
+  // --- Colonne spécialisations ---
+  el('specList').innerHTML = specGroups.map(g => {
+    const isActive = state.selectedSpec === g.key;
+    const isDimmed = state.selectedSpec && !isActive;
+    const peopleChips = isActive ? `
+      <div class="spec-people">
+        ${g.people.map(p => `<span class="chip ${p.id === state.highlightPersonId ? 'highlight' : ''}">${escapeHtml(p.fullName || '(sans nom)')}</span>`).join('')}
+      </div>` : '';
+    return `
+      <div class="spec-card ${isActive ? 'active' : ''} ${isDimmed ? 'dimmed' : ''}" data-key="${g.key}">
+        <div class="spec-top">
+          <div class="spec-name"><span class="swatch" style="background:${g.color}"></span>${escapeHtml(g.label)}</div>
+          <span class="count-badge">${g.people.length}</span>
+        </div>
+        ${peopleChips}
+      </div>`;
+  }).join('');
+
+  el('specList').querySelectorAll('.spec-card').forEach(node => {
+    node.addEventListener('click', () => selectSpec(node.dataset.key));
+  });
+
+  // --- Colonne personnes ---
+  const search = normalize(state.search);
+  const filteredPeople = people.filter(p => !search || normalize(p.fullName).includes(search));
+  el('peopleHeading').textContent = `Personnes (${filteredPeople.length}${filteredPeople.length !== people.length ? ' / ' + people.length : ''})`;
+
+  if(filteredPeople.length === 0){
+    el('peopleList').innerHTML = '<div class="empty">Aucune personne trouvée.</div>';
+  }else{
+    el('peopleList').innerHTML = filteredPeople.map(p => {
+      const isActive = p.id === state.highlightPersonId;
+      const isDimmed = state.selectedSpec && p.specKey !== state.selectedSpec;
+      const color = colorFor(p.specKey);
+      return `
+        <div class="person-row ${isActive ? 'active' : ''} ${isDimmed ? 'dimmed' : ''}" data-id="${p.id}">
+          <span class="person-name">${escapeHtml(p.fullName || '(sans nom)')}</span>
+          <span class="person-spec"><span class="swatch" style="background:${color}"></span>${escapeHtml(p.specLabel)}</span>
+        </div>`;
+    }).join('');
+
+    el('peopleList').querySelectorAll('.person-row').forEach(node => {
+      node.addEventListener('click', () => {
+        const person = people.find(p => p.id === node.dataset.id);
+        if(person) selectPerson(person);
+      });
+    });
+  }
+}
+
+function escapeHtml(str){
+  return (str || '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[ch]));
+}
+
+el('resetBtn').addEventListener('click', resetSelection);
+el('refreshBtn').addEventListener('click', fetchData);
+el('search').addEventListener('input', (e) => { state.search = e.target.value; render(); });
+
+fetchData();
+setInterval(fetchData, REFRESH_MS);
+</script>
+</body>
+</html>
