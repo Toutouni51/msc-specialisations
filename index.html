@@ -137,7 +137,8 @@
   .person-main{display:flex;flex-direction:column;gap:3px;flex:1 1 auto;min-width:7rem;}
   .person-name{font-weight:600;font-size:.92rem;overflow-wrap:break-word;}
   .person-projet{font-style:italic;font-size:.8rem;color:var(--text-dim);line-height:1.35;overflow-wrap:break-word;}
-  .person-spec{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text-dim);flex:0 1 auto;min-width:0;overflow-wrap:break-word;text-align:right;}
+  .person-spec{display:block;font-size:.8rem;color:var(--text-dim);flex:0 1 auto;min-width:0;overflow-wrap:break-word;text-align:right;}
+  .person-spec .swatch{display:inline-block;vertical-align:middle;margin-right:6px;position:relative;top:-1px;}
 
   .empty, .error-box{
     color:var(--text-dim);font-size:.88rem;padding:24px 8px;text-align:center;
@@ -206,6 +207,7 @@ function normalize(str){
 
 function colorFor(key){
   if(key === UNSPECIFIED_KEY) return '#9a97a3';
+  if(key.includes('business development key account')) return '#26a69a'; // vert d'eau
   let h = 0;
   for(let i=0;i<key.length;i++){ h = (h*31 + key.charCodeAt(i)) >>> 0; }
   return PALETTE[h % PALETTE.length];
