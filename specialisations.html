@@ -221,10 +221,10 @@ function render(){
     el('accList').innerHTML = '<div class="empty">Aucune réponse pour l\'instant.</div>';
     return;
   }
-  el('accList').innerHTML = specGroups.map(g => {
+  el('accList').innerHTML = specGroups.map((g, i) => {
     const isOpen = openKeys.has(g.key);
     return `
-      <div class="acc-item ${isOpen ? 'open' : ''}" data-key="${g.key}">
+      <div class="acc-item ${isOpen ? 'open' : ''}" data-idx="${i}">
         <button class="acc-head">
           <span class="acc-title"><span class="swatch" style="background:${g.color}"></span>${escapeHtml(g.label)}</span>
           <span class="acc-right"><span class="count-badge">${g.people.length}</span><span class="chev">▾</span></span>
@@ -239,7 +239,7 @@ function render(){
 
   el('accList').querySelectorAll('.acc-head').forEach(head => {
     head.addEventListener('click', () => {
-      const key = head.parentElement.dataset.key;
+      const key = specGroups[Number(head.parentElement.dataset.idx)].key;
       if(openKeys.has(key)) openKeys.delete(key); else openKeys.add(key);
       render();
     });
