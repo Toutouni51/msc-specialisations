@@ -112,7 +112,7 @@
   .chip.highlight{outline:2px solid var(--accent);background:var(--neoma-soft);color:var(--neoma);border-color:var(--neoma);}
 
   .person-row{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
     border:1px solid var(--border);border-radius:10px;padding:10px 14px;
     cursor:pointer;transition:opacity .15s ease, border-color .15s ease, background .15s ease;
     background:#fff;
@@ -120,8 +120,10 @@
   .person-row:hover{border-color:var(--neoma);}
   .person-row.dimmed{opacity:.4;}
   .person-row.active{border-color:var(--accent);background:var(--neoma-soft);}
+  .person-main{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
   .person-name{font-weight:600;font-size:.92rem;}
-  .person-spec{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text-dim);}
+  .person-projet{font-style:italic;font-size:.8rem;color:var(--text-dim);line-height:1.35;}
+  .person-spec{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text-dim);flex:none;text-align:right;}
 
   .empty, .error-box{
     color:var(--text-dim);font-size:.88rem;padding:24px 8px;text-align:center;
@@ -240,6 +242,7 @@ function processData(json){
     else if(label.includes('specialisation') || label.includes('specialite')) idx.spec = i;
     else if(label.includes('nom')) idx.nom = i;
     else if(label.includes('horodateur') || label.includes('timestamp')) idx.time = i;
+    else if(label.includes('projet')) idx.projet = i;
   });
 
   const groups = new Map();
@@ -258,7 +261,8 @@ function processData(json){
       id: 'p' + i,
       prenom, nom,
       fullName: [prenom, nom].filter(Boolean).join(' '),
-      specKey, specLabel
+      specKey, specLabel,
+      projet: cellVal(row, idx.projet)
     };
     people.push(person);
 
@@ -349,9 +353,13 @@ function render(){
       const isActive = p.id === state.highlightPersonId;
       const isDimmed = state.selectedSpec && p.specKey !== state.selectedSpec;
       const color = colorFor(p.specKey);
+      const projetLine = (isActive && p.projet) ? `<span class="person-projet">${escapeHtml(p.projet)}</span>` : '';
       return `
         <div class="person-row ${isActive ? 'active' : ''} ${isDimmed ? 'dimmed' : ''}" data-id="${p.id}">
-          <span class="person-name">${escapeHtml(p.fullName || '(sans nom)')}</span>
+          <div class="person-main">
+            <span class="person-name">${escapeHtml(p.fullName || '(sans nom)')}</span>
+            ${projetLine}
+          </div>
           <span class="person-spec"><span class="swatch" style="background:${color}"></span>${escapeHtml(p.specLabel)}</span>
         </div>`;
     }).join('');
