@@ -42,6 +42,14 @@
   }
   .hero h1{font-size:1.55rem;margin:0 0 6px;color:#fff;}
   .hero .subtitle{color:rgba(255,255,255,.82);font-size:.9rem;margin:0;max-width:70ch;}
+  .hero-cta{
+    display:inline-flex;align-items:center;gap:8px;margin-top:16px;
+    background:#fff;color:var(--neoma);text-decoration:none;
+    font-weight:700;font-size:.9rem;padding:11px 20px;border-radius:999px;
+    transition:transform .12s ease, box-shadow .15s ease;
+    box-shadow:0 4px 14px rgba(0,0,0,.15);
+  }
+  .hero-cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.22);}
 
   header{margin-bottom:20px;}
   .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
@@ -130,6 +138,7 @@
       <p class="brand">NEOMA Business School</p>
       <h1>Qui fait quelle spécialisation ?</h1>
       <p class="subtitle">Basé sur les réponses du Google Form — cliquez sur une spécialisation ou sur une personne, ça marche dans les deux sens.</p>
+      <a class="hero-cta" href="https://forms.gle/5rUNqkNrW4eoo9cHA" target="_blank" rel="noopener">✍️ Remplir le formulaire</a>
     </div>
     <div class="toolbar">
       <input type="search" id="search" placeholder="Rechercher une personne…">
@@ -151,7 +160,8 @@
   </div>
 
   <footer>
-    Source : <a href="https://docs.google.com/spreadsheets/d/1vlO_Jsv6eoYjPSaFkuKL_7AUa5jQGTM3UDsTSVPKqw4/edit" target="_blank" rel="noopener">Google Sheet</a>
+    <a href="https://forms.gle/5rUNqkNrW4eoo9cHA" target="_blank" rel="noopener">✍️ Remplir le formulaire</a>
+    · Source : <a href="https://docs.google.com/spreadsheets/d/1vlO_Jsv6eoYjPSaFkuKL_7AUa5jQGTM3UDsTSVPKqw4/edit" target="_blank" rel="noopener">Google Sheet</a>
     · actualisation automatique toutes les 45s
   </footer>
 </div>
