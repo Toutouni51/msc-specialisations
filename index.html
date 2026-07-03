@@ -3,17 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#562c80">
 <title>Spécialisations — MSc AI for Business</title>
 <style>
   :root{
-    --bg:#0f1117;
-    --panel:#171923;
-    --panel-2:#1e212e;
-    --border:#2a2e3d;
-    --text:#eef0f5;
-    --text-dim:#9aa0b0;
-    --accent:#6366f1;
-    --grey:#6b7280;
+    --neoma:#562c80;        /* violet principal NEOMA */
+    --neoma-dark:#310b48;   /* violet foncé NEOMA */
+    --neoma-soft:#efe9f4;   /* violet très clair (fonds actifs) */
+    --bg:#f2f2f2;           /* gris clair charte */
+    --panel:#ffffff;
+    --border:#e4e1ec;
+    --text:#2f2f2f;         /* presque noir charte */
+    --text-dim:#6f6b7a;
+    --accent:#562c80;
+    --grey:#9a97a3;
     --radius:14px;
   }
   *{box-sizing:border-box;}
@@ -25,95 +28,109 @@
     min-height:100vh;
   }
   .wrap{max-width:1100px;margin:0 auto;padding:24px 18px 60px;}
-  header{margin-bottom:20px;}
-  h1{font-size:1.5rem;margin:0 0 4px;}
-  .subtitle{color:var(--text-dim);font-size:.9rem;margin:0;}
-  .toolbar{
-    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-    margin-top:18px;
+
+  /* --- Bandeau NEOMA --- */
+  .hero{
+    background:linear-gradient(135deg,var(--neoma) 0%,var(--neoma-dark) 100%);
+    color:#fff;border-radius:var(--radius);
+    padding:26px 24px;margin-bottom:18px;
+    box-shadow:0 8px 24px rgba(49,11,72,.18);
   }
+  .hero .brand{
+    font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+    font-weight:700;opacity:.85;margin:0 0 10px;
+  }
+  .hero h1{font-size:1.55rem;margin:0 0 6px;color:#fff;}
+  .hero .subtitle{color:rgba(255,255,255,.82);font-size:.9rem;margin:0;max-width:70ch;}
+
+  header{margin-bottom:20px;}
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
   input[type="search"]{
     flex:1;min-width:180px;
-    background:var(--panel-2);border:1px solid var(--border);
+    background:#fff;border:1px solid var(--border);
     color:var(--text);padding:10px 14px;border-radius:10px;font-size:.9rem;
   }
-  input[type="search"]:focus{outline:2px solid var(--accent);outline-offset:0;}
+  input[type="search"]::placeholder{color:#a7a3b0;}
+  input[type="search"]:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);}
   button{
-    background:var(--panel-2);color:var(--text);border:1px solid var(--border);
+    background:#fff;color:var(--text);border:1px solid var(--border);
     padding:10px 14px;border-radius:10px;font-size:.85rem;cursor:pointer;
-    display:flex;align-items:center;gap:6px;
+    display:flex;align-items:center;gap:6px;transition:border-color .15s,background .15s,color .15s;
   }
-  button:hover{border-color:var(--accent);}
-  button.reset{background:var(--accent);border-color:var(--accent);color:white;}
+  button:hover{border-color:var(--accent);color:var(--accent);}
+  button.reset{background:var(--accent);border-color:var(--accent);color:#fff;}
+  button.reset:hover{background:var(--neoma-dark);color:#fff;}
   .status{font-size:.78rem;color:var(--text-dim);display:flex;align-items:center;gap:6px;}
   .dot-live{width:7px;height:7px;border-radius:50%;background:#22c55e;flex:none;}
   .dot-live.error{background:#ef4444;}
   .dot-live.loading{background:#f59e0b;}
 
-  .grid{
-    display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px;
-  }
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px;}
   @media (max-width:760px){.grid{grid-template-columns:1fr;}}
 
   .panel{
     background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
-    padding:16px;
+    padding:16px;box-shadow:0 2px 10px rgba(47,47,47,.05);
   }
   .panel h2{
     font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;
-    color:var(--text-dim);margin:0 0 12px;font-weight:600;
+    color:var(--neoma);margin:0 0 12px;font-weight:700;
   }
   .list{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow-y:auto;}
 
   .spec-card{
     border:1px solid var(--border);border-radius:10px;padding:12px 14px;
     cursor:pointer;transition:opacity .15s ease, border-color .15s ease, background .15s ease;
-    background:var(--panel-2);
+    background:#fff;
   }
-  .spec-card.dimmed{opacity:.35;}
-  .spec-card.active{border-color:var(--accent-color,var(--accent));background:rgba(99,102,241,.12);}
+  .spec-card:hover{border-color:var(--neoma);}
+  .spec-card.dimmed{opacity:.4;}
+  .spec-card.active{border-color:var(--accent);background:var(--neoma-soft);}
   .spec-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
   .spec-name{display:flex;align-items:center;gap:9px;font-weight:600;font-size:.95rem;}
   .swatch{width:10px;height:10px;border-radius:50%;flex:none;}
   .count-badge{
-    background:var(--border);color:var(--text);font-size:.75rem;
-    padding:2px 9px;border-radius:999px;font-weight:600;
+    background:var(--neoma-soft);color:var(--neoma);font-size:.75rem;
+    padding:2px 9px;border-radius:999px;font-weight:700;
   }
   .spec-people{
     margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
     display:flex;flex-wrap:wrap;gap:6px;
   }
   .chip{
-    background:var(--border);padding:4px 10px;border-radius:999px;font-size:.8rem;
+    background:var(--bg);border:1px solid var(--border);
+    padding:4px 10px;border-radius:999px;font-size:.8rem;
   }
-  .chip.highlight{outline:1.5px solid var(--accent);}
+  .chip.highlight{outline:2px solid var(--accent);background:var(--neoma-soft);color:var(--neoma);border-color:var(--neoma);}
 
   .person-row{
     display:flex;align-items:center;justify-content:space-between;gap:10px;
     border:1px solid var(--border);border-radius:10px;padding:10px 14px;
     cursor:pointer;transition:opacity .15s ease, border-color .15s ease, background .15s ease;
-    background:var(--panel-2);
+    background:#fff;
   }
-  .person-row.dimmed{opacity:.3;}
-  .person-row.active{border-color:var(--accent);background:rgba(99,102,241,.15);}
+  .person-row:hover{border-color:var(--neoma);}
+  .person-row.dimmed{opacity:.4;}
+  .person-row.active{border-color:var(--accent);background:var(--neoma-soft);}
   .person-name{font-weight:600;font-size:.92rem;}
-  .person-spec{
-    display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text-dim);
-  }
+  .person-spec{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text-dim);}
 
   .empty, .error-box{
     color:var(--text-dim);font-size:.88rem;padding:24px 8px;text-align:center;
   }
-  .error-box{color:#f87171;}
+  .error-box{color:#c0392b;}
   footer{margin-top:26px;color:var(--text-dim);font-size:.78rem;text-align:center;}
-  footer a{color:var(--text-dim);}
+  footer a{color:var(--neoma);}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Qui fait quelle spécialisation ?</h1>
-    <p class="subtitle">Basé sur les réponses du Google Form — cliquez sur une spécialisation ou sur une personne, ça marche dans les deux sens.</p>
+    <div class="hero">
+      <p class="brand">NEOMA Business School</p>
+      <h1>Qui fait quelle spécialisation ?</h1>
+      <p class="subtitle">Basé sur les réponses du Google Form — cliquez sur une spécialisation ou sur une personne, ça marche dans les deux sens.</p>
+    </div>
     <div class="toolbar">
       <input type="search" id="search" placeholder="Rechercher une personne…">
       <button id="resetBtn" style="display:none" class="reset">✕ Tout afficher</button>
@@ -143,7 +160,8 @@
 const SHEET_ID = '1vlO_Jsv6eoYjPSaFkuKL_7AUa5jQGTM3UDsTSVPKqw4';
 const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 const REFRESH_MS = 45000;
-const PALETTE = ['#6366f1','#ec4899','#10b981','#f59e0b','#3b82f6','#ef4444','#14b8a6','#8b5cf6','#f97316','#06b6d4','#84cc16','#e11d48'];
+// Palette charte NEOMA : violet principal + couleurs secondaires (teal, corail, or, bleus…)
+const PALETTE = ['#562c80','#00777b','#b30c3e','#f9b000','#004a7a','#00b8ee','#e84e0f','#0168b0','#28a745','#310b48','#7a4fa3','#c0392b'];
 const UNSPECIFIED_KEY = '__unspecified__';
 
 let people = [];        // [{id, prenom, nom, specKey, specLabel}]
@@ -157,7 +175,7 @@ function normalize(str){
 }
 
 function colorFor(key){
-  if(key === UNSPECIFIED_KEY) return '#6b7280';
+  if(key === UNSPECIFIED_KEY) return '#9a97a3';
   let h = 0;
   for(let i=0;i<key.length;i++){ h = (h*31 + key.charCodeAt(i)) >>> 0; }
   return PALETTE[h % PALETTE.length];
