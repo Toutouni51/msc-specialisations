@@ -51,6 +51,15 @@
   }
   .hero-cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.22);}
 
+  .tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .tab{
+    text-decoration:none;font-weight:600;font-size:.88rem;
+    padding:9px 16px;border-radius:999px;border:1px solid var(--border);
+    color:var(--text);background:#fff;transition:background .15s,border-color .15s,color .15s;
+  }
+  .tab:hover{border-color:var(--neoma);color:var(--neoma);}
+  .tab.active{background:var(--neoma);border-color:var(--neoma);color:#fff;}
+
   header{margin-bottom:20px;}
   .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
   input[type="search"]{
@@ -142,6 +151,10 @@
       <p class="subtitle">Plateforme pour savoir qui sont les coquins de Reims se dirigeant gaiement vers les terres rouennaises pour leur 4a de légende.</p>
       <a class="hero-cta" href="https://forms.gle/5rUNqkNrW4eoo9cHA" target="_blank" rel="noopener">✍️ Remplir le formulaire</a>
     </div>
+    <nav class="tabs">
+      <a class="tab active" href="index.html">Vue croisée</a>
+      <a class="tab" href="specialisations.html">Par spécialisation</a>
+    </nav>
     <div class="toolbar">
       <input type="search" id="search" placeholder="Rechercher une personne…">
       <button id="resetBtn" style="display:none" class="reset">✕ Tout afficher</button>
