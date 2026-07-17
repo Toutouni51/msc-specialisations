@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#562c80">
+<meta name="theme-color" content="#ffcc00">
 <title>Par spécialisation — ReimsLand à Rouen</title>
 <style>
   :root{
@@ -27,16 +27,22 @@
   .wrap{max-width:860px;margin:0 auto;padding:24px 18px 60px;}
 
   .hero{
-    background:linear-gradient(135deg,var(--neoma) 0%,var(--neoma-dark) 100%);
-    color:#fff;border-radius:var(--radius);padding:26px 24px;margin-bottom:18px;
-    box-shadow:0 8px 24px rgba(49,11,72,.18);
+    position:relative;overflow:hidden;
+    background:#ffcc00;
+    color:#111;border-radius:var(--radius);padding:16px 24px;margin-bottom:18px;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
   }
+  .hero::before,.hero::after{
+    content:"";display:block;height:10px;margin:0 -24px 16px;
+    background:repeating-linear-gradient(45deg,#111 0 14px,#ffcc00 14px 28px);
+  }
+  .hero::after{margin:16px -24px 0;}
   .hero .brand{
     font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
-    font-weight:700;opacity:.85;margin:0 0 10px;
+    font-weight:700;opacity:.85;margin:0 0 10px;color:#111;
   }
-  .hero h1{font-size:1.55rem;margin:0 0 6px;color:#fff;}
-  .hero .subtitle{color:rgba(255,255,255,.82);font-size:.9rem;margin:0;max-width:70ch;}
+  .hero h1{font-size:1.55rem;margin:0 0 6px;color:#111;}
+  .hero .subtitle{color:rgba(0,0,0,.78);font-size:.9rem;margin:0;max-width:70ch;}
 
   .tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
   .tab{
