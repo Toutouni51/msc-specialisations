@@ -123,20 +123,19 @@
   <footer>
     <a href="https://forms.gle/5rUNqkNrW4eoo9cHA" target="_blank" rel="noopener">✍️ Remplir le formulaire</a>
     · Source : <a href="https://docs.google.com/spreadsheets/d/1vlO_Jsv6eoYjPSaFkuKL_7AUa5jQGTM3UDsTSVPKqw4/edit" target="_blank" rel="noopener">Google Sheet</a>
-    · actualisation automatique toutes les 20s
+    · actualisation automatique toutes les 45s
   </footer>
 </div>
 
 <script>
 const SHEET_ID = '1vlO_Jsv6eoYjPSaFkuKL_7AUa5jQGTM3UDsTSVPKqw4';
 const GVIZ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-const REFRESH_MS = 20000;
+const REFRESH_MS = 45000;
 const PALETTE = ['#562c80','#00777b','#b30c3e','#f9b000','#004a7a','#00b8ee','#e84e0f','#0168b0','#28a745','#310b48','#7a4fa3','#c0392b'];
 const UNSPECIFIED_KEY = '__unspecified__';
 
 let specGroups = [];
 let openKeys = new Set();   // spécialisations dépliées (conservé entre les rafraîchissements)
-let lastSignature = null;   // empreinte des données au dernier rendu (pour ne redessiner qu'en cas de changement)
 
 const el = (id) => document.getElementById(id);
 
@@ -222,10 +221,6 @@ function processData(json){
   });
   specGroups.forEach(g => g.people.sort((a, b) => a.fullName.localeCompare(b.fullName)));
 
-  // On ne redessine que si les données ont réellement changé (nouvelle entrée, modif…)
-  const sig = JSON.stringify(specGroups.map(g => [g.label, g.people.map(p => [p.fullName, p.projet])]));
-  if(sig === lastSignature) return;
-  lastSignature = sig;
   render();
 }
 
